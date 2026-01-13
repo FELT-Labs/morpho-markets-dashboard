@@ -26,6 +26,21 @@ export const GET_MARKETS_QUERY = gql`
         lltv
         listed
         creationTimestamp
+        targetBorrowUtilization
+        targetWithdrawUtilization
+        reallocatableLiquidityAssets
+        warnings {
+          type
+          level
+        }
+        badDebt {
+          underlying
+          usd
+        }
+        realizedBadDebt {
+          underlying
+          usd
+        }
         loanAsset {
           id
           symbol
@@ -51,8 +66,14 @@ export const GET_MARKETS_QUERY = gql`
             currency
           }
         }
+        oracle {
+          id
+          address
+          type
+        }
         state {
           id
+          blockNumber
           supplyAssets
           borrowAssets
           supplyAssetsUsd
@@ -82,6 +103,7 @@ export const GET_MARKETS_QUERY = gql`
           totalLiquidity
           totalLiquidityUsd
           dailyPriceVariation
+          price
         }
       }
       pageInfo {
@@ -152,9 +174,60 @@ export const GET_MARKET_BY_UNIQUE_KEY_QUERY = gql`
           id
           network
         }
+        data {
+          ... on MorphoChainlinkOracleV2Data {
+            baseFeedOne {
+              address
+              decimals
+            }
+            baseFeedTwo {
+              address
+              decimals
+            }
+            quoteFeedOne {
+              address
+              decimals
+            }
+            quoteFeedTwo {
+              address
+              decimals
+            }
+            scaleFactor
+            baseOracleVault {
+              address
+            }
+            quoteOracleVault {
+              address
+            }
+          }
+          ... on MorphoChainlinkOracleData {
+            baseFeedOne {
+              address
+              decimals
+            }
+            baseFeedTwo {
+              address
+              decimals
+            }
+            quoteFeedOne {
+              address
+              decimals
+            }
+            quoteFeedTwo {
+              address
+              decimals
+            }
+            scaleFactor
+            baseOracleVault {
+              address
+            }
+          }
+        }
       }
+      reallocatableLiquidityAssets
       state {
         id
+        blockNumber
         supplyAssets
         borrowAssets
         supplyAssetsUsd
@@ -184,6 +257,7 @@ export const GET_MARKET_BY_UNIQUE_KEY_QUERY = gql`
         totalLiquidity
         totalLiquidityUsd
         dailyPriceVariation
+        price
         rewards {
           supplyApr
           borrowApr

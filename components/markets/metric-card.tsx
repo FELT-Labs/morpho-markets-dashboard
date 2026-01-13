@@ -28,7 +28,7 @@ export function MetricCard({
   valueClassName,
 }: MetricCardProps) {
   return (
-    <Card className={cn(className)}>
+    <Card className={cn("transition-all duration-200 hover:shadow-md", className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export function MetricCard({
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline gap-2">
-          <div className={cn("text-2xl font-bold", valueClassName)}>{value}</div>
+          <div className={cn("text-2xl font-bold transition-colors", valueClassName)}>{value}</div>
         </div>
         {subtitle && (
           <div className="text-sm text-muted-foreground mt-1">{subtitle}</div>

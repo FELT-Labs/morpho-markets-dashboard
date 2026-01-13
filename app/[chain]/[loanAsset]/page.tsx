@@ -1,79 +1,16 @@
+/**
+ * Market list page - refactored to use service layer
+ */
+
 import { Suspense } from "react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
-import { graphQLClient } from "@/lib/graphql/client"
-import { GET_MARKETS_QUERY, GET_ASSETS_QUERY } from "@/lib/graphql/queries"
 import { MarketsTable } from "@/components/markets/markets-table"
 import { Badge } from "@/components/ui/badge"
-import { getChainIdFromName } from "@/lib/utils"
-import type { MarketsResponse } from "@/types"
-
-interface Asset {
-  id: string
-  symbol: string
-  address: string
-  name: string
-  logoURI?: string | null
-  chain: {
-    id: number
-    network: string
-  }
-}
-
-async function getAssets(chainId: number) {
-  try {
-    const data = await graphQLClient.request<{ assets: { items: Asset[] } }>(GET_ASSETS_QUERY, {
-      first: 1000,
-      chainId_in: [chainId],
-    })
-    
-    // Group assets by symbol and collect all addresses
-    const assetsBySymbol = new Map<string, { symbol: string; addresses: string[] }>()
-    
-    data.assets.items.forEach((asset) => {
-      if (!assetsBySymbol.has(asset.symbol)) {
-        assetsBySymbol.set(asset.symbol, {
-          symbol: asset.symbol,
-          addresses: [],
-        })
-      }
-      assetsBySymbol.get(asset.symbol)!.addresses.push(asset.address)
-    })
-    
-    return Array.from(assetsBySymbol.values())
-  } catch (error) {
-    console.error("Failed to fetch assets:", error)
-    return []
-  }
-}
-
-async function getMarkets(
-  chainId: number,
-  loanAssetAddresses: string[] | undefined
-) {
-  try {
-    const data = await graphQLClient.request<MarketsResponse>(GET_MARKETS_QUERY, {
-      first: 200,
-      skip: 0,
-      chainId_in: [chainId],
-      loanAssetAddress_in: loanAssetAddresses,
-      orderBy: "SupplyAssetsUsd",
-      orderDirection: "Desc",
-    })
-    
-    return {
-      markets: data.markets.items,
-      pageInfo: data.markets.pageInfo,
-    }
-  } catch (error) {
-    console.error("Failed to fetch markets:", error)
-    return {
-      markets: [],
-      pageInfo: undefined,
-    }
-  }
-}
+import { getChainIdFromName, capitalizeChainName } from "@/lib/utils/chain-utils"
+import { findAssetBySymbol } from "@/lib/services/asset-service"
+import { fetchMarkets } from "@/lib/services/market-service"
 
 export default async function MarketListPage({
   params,
@@ -92,17 +29,19 @@ export default async function MarketListPage({
   }
   
   // Fetch assets for the chain to get loan asset addresses
-  const assets = await getAssets(chainId)
-  const loanAssetData = assets.find(a => a.symbol.toUpperCase() === loanAsset.toUpperCase())
+  const loanAssetData = await findAssetBySymbol(chainId, loanAsset)
   
   if (!loanAssetData) {
     notFound()
   }
   
   // Fetch markets
-  const { markets, pageInfo } = await getMarkets(chainId, loanAssetData.addresses)
+  const { markets, pageInfo } = await fetchMarkets({
+    chainId,
+    loanAssetAddresses: loanAssetData.addresses,
+  })
   
-  const chainLabel = chain.charAt(0).toUpperCase() + chain.slice(1)
+  const chainLabel = capitalizeChainName(chain)
   const totalCount = pageInfo?.countTotal || markets.length
   
   return (

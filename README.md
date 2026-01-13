@@ -9,6 +9,10 @@ A modern web application for browsing and analyzing Morpho lending markets acros
 - 📈 **Market Details**: Comprehensive market information including APYs, liquidity, and configuration
 - 🎨 **Modern UI**: Built with shadcn/ui and Tailwind CSS for a beautiful, responsive experience
 - ⚡ **Fast Performance**: Server-side rendering with Next.js 16 App Router
+- 🗂️ **Data Categorization**: Markets data organized into 6 intuitive categories (Safety, Liquidity, Yield, Oracle, Configuration, Activity)
+- 📑 **Tabbed Interface**: Easy navigation through categorized metrics on market detail pages
+- 🛡️ **Risk Indicators**: Visual safety assessments with color-coded risk levels
+- 🔮 **Oracle Health**: Oracle type and configuration status at a glance
 
 ## Tech Stack
 
@@ -89,6 +93,11 @@ pnpm dev
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
 
+## Documentation
+
+- **[CATEGORY_GUIDE.md](./CATEGORY_GUIDE.md)** - User guide explaining the 6 data categories and how to use them
+- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Technical implementation details for developers
+
 ## API Reference
 
 The application uses the Morpho GraphQL API to fetch market data. Key queries include:
@@ -107,17 +116,31 @@ The application uses the Morpho GraphQL API to fetch market data. Key queries in
   - Blockchain network (Ethereum, Base, etc.)
   - Loan asset (USDC, WETH, etc.)
   - Collateral asset
-- Sort by total supply value (USD)
+- Sort by any column (supply APY, borrow APY, liquidity, utilization, etc.)
+- **Enhanced Table with Category Groupings:**
+  - Market info (asset, chain)
+  - Safety (risk indicator)
+  - Yield (supply/borrow APY with rewards)
+  - Liquidity (available capital, utilization)
+  - Oracle (type and health)
 - Click any market to view detailed information
 
 ### Market Detail Page (`/markets/[uniqueKey]`)
 
-Displays comprehensive market information:
-- Supply and borrow APYs
-- Total supply, borrow, and available liquidity
-- Market utilization rate
-- Loan and collateral asset details
-- Oracle information
-- Market configuration (IRM, LLTV, fees)
-- Reward programs
-- Associated vaults
+Displays comprehensive market information organized into 6 categories:
+
+**📑 Category Tabs:**
+1. **Safety & Risk**: LLTV, bad debt, warnings, utilization, price volatility
+2. **Liquidity & Capacity**: Available liquidity, supply/borrow amounts, collateral, target utilizations
+3. **Yield & Returns**: Supply/borrow APYs (base + net), rewards, time-averaged rates, fee rate
+4. **Oracle Health**: Oracle type, feeds, configuration status, current price
+5. **Market Configuration**: IRM, asset details, creation info, supplying vaults
+6. **Activity & Shares**: Supply/borrow shares, last update timestamp/block
+
+**Visual Indicators:**
+- Color-coded risk levels (🟢 Low, 🟡 Medium, 🔴 High)
+- Oracle health badges
+- Warning alerts
+- Reward indicators
+
+For detailed information about the categories, see [CATEGORY_GUIDE.md](./CATEGORY_GUIDE.md)

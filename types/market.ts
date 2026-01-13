@@ -17,6 +17,7 @@ export interface Market {
   warnings?: MarketWarning[]
   targetBorrowUtilization: string
   targetWithdrawUtilization: string
+  reallocatableLiquidityAssets?: string | null
 }
 
 export interface MorphoBlue {
@@ -35,6 +36,7 @@ export interface Asset {
 
 export interface MarketState {
   id: string
+  blockNumber?: string | null
   supplyAssets: string
   borrowAssets: string
   supplyAssetsUsd?: number | null
@@ -65,6 +67,7 @@ export interface MarketState {
   totalLiquidity?: string | null
   totalLiquidityUsd?: number | null
   dailyPriceVariation?: number | null
+  price?: string | null
 }
 
 export interface MarketStateReward {
@@ -85,6 +88,37 @@ export interface Oracle {
   address: string
   type: OracleType
   chain: Chain
+  data?: OracleData | null
+}
+
+export type OracleData = MorphoChainlinkOracleV2Data | MorphoChainlinkOracleData
+
+export interface MorphoChainlinkOracleV2Data {
+  baseFeedOne?: OracleFeed | null
+  baseFeedTwo?: OracleFeed | null
+  quoteFeedOne?: OracleFeed | null
+  quoteFeedTwo?: OracleFeed | null
+  scaleFactor: string
+  baseOracleVault?: OracleVault | null
+  quoteOracleVault?: OracleVault | null
+}
+
+export interface MorphoChainlinkOracleData {
+  baseFeedOne?: OracleFeed | null
+  baseFeedTwo?: OracleFeed | null
+  quoteFeedOne?: OracleFeed | null
+  quoteFeedTwo?: OracleFeed | null
+  scaleFactor: string
+  baseOracleVault?: OracleVault | null
+}
+
+export interface OracleFeed {
+  address: string
+  decimals?: number | null
+}
+
+export interface OracleVault {
+  address: string
 }
 
 export enum OracleType {
@@ -128,4 +162,32 @@ export interface MarketWarning {
 
 export interface MarketResponse {
   marketByUniqueKey: Market
+}
+
+// Category types for data organization
+export type DataCategory = 
+  | 'safety'
+  | 'liquidity' 
+  | 'yield'
+  | 'oracle'
+  | 'configuration'
+  | 'activity'
+
+export interface CategorizedMetric {
+  category: DataCategory
+  label: string
+  value: string | number | null | undefined
+  field: string
+  priority: 'high' | 'medium' | 'low'
+  trend?: 'up' | 'down' | 'neutral'
+  description?: string
+  valueClassName?: string
+}
+
+export interface CategoryConfig {
+  id: DataCategory
+  label: string
+  description: string
+  icon?: string
+  color: string
 }
