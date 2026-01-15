@@ -1,160 +1,26 @@
 @import "tailwindcss";
 
-@theme {
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(0 0% 3.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(0 0% 3.9%);
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(0 0% 3.9%);
-  --color-primary: hsl(0 0% 9%);
-  --color-primary-foreground: hsl(0 0% 98%);
-  --color-secondary: hsl(0 0% 96.1%);
-  --color-secondary-foreground: hsl(0 0% 9%);
-  --color-muted: hsl(0 0% 96.1%);
-  --color-muted-foreground: hsl(0 0% 45.1%);
-  --color-accent: hsl(0 0% 96.1%);
-  --color-accent-foreground: hsl(0 0% 9%);
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(0 0% 98%);
-  --color-border: hsl(0 0% 89.8%);
-  --color-input: hsl(0 0% 89.8%);
-  --color-ring: hsl(0 0% 3.9%);
-  --radius: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: hsl(0 0% 3.9%);
-    --color-foreground: hsl(0 0% 98%);
-    --color-card: hsl(0 0% 3.9%);
-    --color-card-foreground: hsl(0 0% 98%);
-    --color-popover: hsl(0 0% 3.9%);
-    --color-popover-foreground: hsl(0 0% 98%);
-    --color-primary: hsl(0 0% 98%);
-    --color-primary-foreground: hsl(0 0% 9%);
-    --color-secondary: hsl(0 0% 14.9%);
-    --color-secondary-foreground: hsl(0 0% 98%);
-    --color-muted: hsl(0 0% 14.9%);
-    --color-muted-foreground: hsl(0 0% 63.9%);
-    --color-accent: hsl(0 0% 14.9%);
-    --color-accent-foreground: hsl(0 0% 98%);
-    --color-destructive: hsl(0 62.8% 30.6%);
-    --color-destructive-foreground: hsl(0 0% 98%);
-    --color-border: hsl(0 0% 14.9%);
-    --color-input: hsl(0 0% 14.9%);
-    --color-ring: hsl(0 0% 83.1%);
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
 body {
-  font-family: var(--font-sans);
-  background: var(--color-background);
-  color: var(--color-foreground);
-}
-
-/* Category-specific styling */
-@layer utilities {
-  /* Category accent colors */
-  .category-safety {
-    @apply border-l-red-500;
-  }
-  
-  .category-liquidity {
-    @apply border-l-blue-500;
-  }
-  
-  .category-yield {
-    @apply border-l-green-500;
-  }
-  
-  .category-oracle {
-    @apply border-l-purple-500;
-  }
-  
-  .category-config {
-    @apply border-l-orange-500;
-  }
-  
-  .category-activity {
-    @apply border-l-yellow-500;
-  }
-  
-  /* Risk level colors */
-  .risk-low {
-    @apply text-green-600 dark:text-green-400;
-  }
-  
-  .risk-medium {
-    @apply text-yellow-600 dark:text-yellow-400;
-  }
-  
-  .risk-high {
-    @apply text-red-600 dark:text-red-400;
-  }
-  
-  /* Metric value colors */
-  .metric-positive {
-    @apply text-green-600 dark:text-green-400;
-  }
-  
-  .metric-negative {
-    @apply text-red-600 dark:text-red-400;
-  }
-  
-  .metric-neutral {
-    @apply text-blue-600 dark:text-blue-400;
-  }
-  
-  .metric-warning {
-    @apply text-yellow-600 dark:text-yellow-400;
-  }
-  
-  /* Table category borders */
-  .table-category-divider {
-    @apply border-l-2 border-muted;
-  }
-  
-  /* Smooth transitions */
-  .transition-colors-smooth {
-    @apply transition-colors duration-200;
-  }
-}
-
-/* Custom animations */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s ease-in-out infinite;
-}
-
-/* Enhanced card hover effects */
-.card-hover {
-  @apply transition-all duration-200 hover:shadow-md hover:scale-[1.01];
-}
-
-/* Category tab animations */
-@keyframes tab-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tab-content-enter {
-  animation: tab-enter 0.2s ease-out;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
