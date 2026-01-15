@@ -1,8 +1,5 @@
-export default function Home() {
+import { redirect } from 'next/navigation'
 
-  return (
-    <div>
-      Home
-    </div>
-  )
+export default function Home() {
+  redirect('/ethereum/usdc')
 }
