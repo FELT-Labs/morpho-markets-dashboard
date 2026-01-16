@@ -31,10 +31,11 @@ export function formatPercent(value: number | undefined | null, decimals: number
 export function formatBigInt(value: string | bigint, decimals: number): number {
   const bigIntValue = typeof value === 'string' ? BigInt(value) : value
   const divisor = BigInt(10 ** decimals)
-  const quotient = bigIntValue / divisor
-  const remainder = bigIntValue % divisor
   
-  return Number(quotient) + Number(remainder) / Number(divisor)
+  // Convert to string to avoid BigInt/Number mixing issues
+  const result = Number(bigIntValue) / Number(divisor)
+  
+  return result
 }
 
 export function formatNumber(value: number | undefined | null, decimals: number = 2): string {

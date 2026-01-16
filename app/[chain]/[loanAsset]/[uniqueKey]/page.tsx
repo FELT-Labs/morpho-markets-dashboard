@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CollateralTab } from '@/components/markets/tabs/collateral-tab'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
@@ -19,6 +21,7 @@ export default async function MarketDetailPage({
   const market = await getMarketByKey(uniqueKey, chain)
 
   const ltv = formatPercent(formatBigInt(market.lltv, 18))
+  const chainId = chain === 'ethereum' ? 1 : 1
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -39,7 +42,14 @@ export default async function MarketDetailPage({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="collateral">Collateral</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Total Supply</CardTitle>
@@ -121,44 +131,50 @@ export default async function MarketDetailPage({
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Market Details</CardTitle>
-          <CardDescription>Additional market information</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Loan Asset</div>
-              <div className="font-medium">{market.loanAsset.symbol}</div>
-              <div className="text-xs text-muted-foreground font-mono">
-                {market.loanAsset.address}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Collateral Asset</div>
-              <div className="font-medium">{market.collateralAsset?.symbol || '-'}</div>
-              <div className="text-xs text-muted-foreground font-mono">
-                {market.collateralAsset?.address || '-'}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Loan Asset Price</div>
-              <div className="font-medium">{formatUSD(market.loanAsset.priceUsd)}</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Collateral Asset Price</div>
-              <div className="font-medium">{formatUSD(market.collateralAsset?.priceUsd)}</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Market Unique Key</div>
-              <div className="text-xs font-mono break-all">{market.uniqueKey}</div>
-            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Details</CardTitle>
+              <CardDescription>Additional market information</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Loan Asset</div>
+                  <div className="font-medium">{market.loanAsset.symbol}</div>
+                  <div className="text-xs text-muted-foreground font-mono">
+                    {market.loanAsset.address}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Collateral Asset</div>
+                  <div className="font-medium">{market.collateralAsset?.symbol || '-'}</div>
+                  <div className="text-xs text-muted-foreground font-mono">
+                    {market.collateralAsset?.address || '-'}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Loan Asset Price</div>
+                  <div className="font-medium">{formatUSD(market.loanAsset.priceUsd)}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Collateral Asset Price</div>
+                  <div className="font-medium">{formatUSD(market.collateralAsset?.priceUsd)}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Market Unique Key</div>
+                  <div className="text-xs font-mono break-all">{market.uniqueKey}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="collateral">
+          <CollateralTab uniqueKey={uniqueKey} chainId={chainId} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

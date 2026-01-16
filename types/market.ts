@@ -4,6 +4,7 @@ export interface Asset {
   address: string
   decimals: number
   priceUsd?: number
+  oraclePriceUsd?: number
 }
 
 export interface MarketState {
@@ -16,6 +17,8 @@ export interface MarketState {
   borrowApy: number
   netSupplyApy?: number
   netBorrowApy?: number
+  price?: string
+  dailyPriceVariation?: number
 }
 
 export interface Market {
@@ -40,4 +43,36 @@ export interface MarketFilters {
   orderDirection: OrderDirection
   limit: number
   minSupplyUsd?: number
+}
+
+export interface PriceDataPoint {
+  x: number // timestamp
+  y: number // price value
+}
+
+export type TimeRange = 7 | 30 | 90 | 365
+
+export interface CollateralPriceData {
+  symbol: string
+  name: string
+  currentPrice?: number
+  oraclePrice?: number
+  dailyPriceVariation?: number
+  historicalPrices: PriceDataPoint[]
+}
+
+export interface CollateralAtRiskDataPoint {
+  collateralPriceRatio: number
+  collateralAssets: string
+  collateralUsd: number
+}
+
+export interface CollateralRiskData {
+  lltv: string
+  collateralDecimals: number
+  collateralAssets: string
+  collateralAssetsUsd?: number
+  borrowAssets: string
+  borrowAssetsUsd?: number
+  collateralAtRisk: CollateralAtRiskDataPoint[]
 }
