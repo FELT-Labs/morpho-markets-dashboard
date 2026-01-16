@@ -6,6 +6,8 @@ import { getMarkets, MarketsResponse } from '@/lib/services/market-service'
 import { MarketOrderBy, OrderDirection } from '@/types/market'
 import { MarketsTable } from '@/components/markets-table'
 import { MarketControls } from '@/components/market-controls'
+import { VaultSelector } from '@/components/vault-selector'
+import { VaultMarketExposure } from '@/lib/services/vault-service'
 import { Loader2 } from 'lucide-react'
 
 interface MarketsListProps {
@@ -19,6 +21,7 @@ export function MarketsList({ chain, loanAsset }: MarketsListProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [marketToVaults, setMarketToVaults] = useState<Map<string, VaultMarketExposure[]>>(new Map())
 
   useEffect(() => {
     const fetchMarkets = async () => {
@@ -102,7 +105,7 @@ export function MarketsList({ chain, loanAsset }: MarketsListProps) {
     <div className="container mx-auto px-4 py-8">
       {/* Subtle loading indicator at the top */}
       {isRefreshing && (
-        <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse z-50" />
+        <div className="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-blue-500 to-purple-500 animate-pulse z-50" />
       )}
       
       <div className="mb-8">
@@ -119,11 +122,22 @@ export function MarketsList({ chain, loanAsset }: MarketsListProps) {
         </p>
       </div>
       
+      <VaultSelector 
+        chain={chain} 
+        loanAsset={loanAsset} 
+        onVaultMarketsChange={setMarketToVaults}
+      />
+      
       <MarketControls chain={chain} loanAsset={loanAsset} />
       
       {/* Add opacity transition during refresh */}
       <div className={isRefreshing ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
-        <MarketsTable markets={data.items} chain={chain} loanAsset={loanAsset} />
+        <MarketsTable 
+          markets={data.items} 
+          chain={chain} 
+          loanAsset={loanAsset}
+          marketToVaults={marketToVaults}
+        />
       </div>
       
       {error && (

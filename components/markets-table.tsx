@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Market, MarketOrderBy, OrderDirection } from '@/types/market'
 import { formatUSD, formatPercent } from '@/lib/utils/format'
+import { VaultMarketExposure } from '@/lib/services/vault-service'
 import {
   Table,
   TableBody,
@@ -17,6 +18,7 @@ interface MarketsTableProps {
   markets: Market[]
   chain: string
   loanAsset: string
+  marketToVaults?: Map<string, VaultMarketExposure[]>
 }
 
 const FIELD_TO_ORDER_BY: Record<string, MarketOrderBy> = {
@@ -35,7 +37,7 @@ const ORDER_BY_TO_FIELD: Record<MarketOrderBy, string> = {
   SupplyApy: 'apy',
 }
 
-export function MarketsTable({ markets, chain, loanAsset }: MarketsTableProps) {
+export function MarketsTable({ markets, chain, loanAsset, marketToVaults }: MarketsTableProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -140,30 +142,50 @@ export function MarketsTable({ markets, chain, loanAsset }: MarketsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {markets.map((market) => (
-            <TableRow
-              key={market.uniqueKey}
-              onClick={() => handleRowClick(market.uniqueKey)}
-              className="cursor-pointer"
-            >
-              <TableCell className="font-medium">
-                <div>
-                  <div className="font-semibold">
-                    {market.collateralAsset?.symbol || 'Unknown'}
+          {markets.map((market) => {
+            const vaultExposures = marketToVaults?.get(market.uniqueKey) || []
+            
+            return (
+              <TableRow
+                key={market.uniqueKey}
+                onClick={() => handleRowClick(market.uniqueKey)}
+                className="cursor-pointer"
+              >
+                <TableCell className="font-medium">
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <div className="font-semibold flex items-center gap-2 flex-wrap">
+                        {market.collateralAsset?.symbol || 'Unknown'}
+                        {vaultExposures.map((exposure) => (
+                          <span 
+                            key={exposure.vaultAddress}
+                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                            style={{ 
+                              backgroundColor: `${exposure.color}20`,
+                              color: exposure.color,
+                              borderLeft: `3px solid ${exposure.color}`
+                            }}
+                            title={exposure.vaultName}
+                          >
+                            {exposure.vaultSymbol}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {market.collateralAsset?.name || '-'}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {market.collateralAsset?.name || '-'}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>{formatUSD(market.state.supplyAssetsUsd, true)}</TableCell>
-              <TableCell>{formatUSD(market.state.borrowAssetsUsd, true)}</TableCell>
-              <TableCell>{formatPercent(market.state.utilization)}</TableCell>
-              <TableCell className="text-green-600">
-                {formatPercent(market.state.supplyApy)}
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell>{formatUSD(market.state.supplyAssetsUsd, true)}</TableCell>
+                <TableCell>{formatUSD(market.state.borrowAssetsUsd, true)}</TableCell>
+                <TableCell>{formatPercent(market.state.utilization)}</TableCell>
+                <TableCell className="text-green-600">
+                  {formatPercent(market.state.supplyApy)}
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
       
