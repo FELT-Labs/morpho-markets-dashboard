@@ -76,3 +76,60 @@ export interface CollateralRiskData {
   borrowAssetsUsd?: number
   collateralAtRisk: CollateralAtRiskDataPoint[]
 }
+
+export interface YieldMetrics {
+  // Current instantaneous rates
+  supplyApy: number
+  netSupplyApy?: number
+  borrowApy: number
+  netBorrowApy?: number
+  apyAtTarget: number
+  utilization: number
+  fee: number
+  
+  // Time-averaged rates
+  avgSupplyApy?: number
+  avgNetSupplyApy?: number
+  avgBorrowApy?: number
+  avgNetBorrowApy?: number
+  
+  dailySupplyApy?: number
+  dailyNetSupplyApy?: number
+  dailyBorrowApy?: number
+  dailyNetBorrowApy?: number
+  
+  weeklySupplyApy?: number
+  weeklyNetSupplyApy?: number
+  weeklyBorrowApy?: number
+  weeklyNetBorrowApy?: number
+  
+  monthlySupplyApy?: number
+  monthlyNetSupplyApy?: number
+  monthlyBorrowApy?: number
+  monthlyNetBorrowApy?: number
+  
+  yearlySupplyApy?: number
+  yearlyNetSupplyApy?: number
+  yearlyBorrowApy?: number
+  yearlyNetBorrowApy?: number
+}
+
+export interface YieldHistoricalDataPoint {
+  x: number // timestamp
+  y: number // value
+}
+
+export interface YieldHistoricalData {
+  supplyApy: YieldHistoricalDataPoint[]
+  netSupplyApy: YieldHistoricalDataPoint[]
+  borrowApy: YieldHistoricalDataPoint[]
+  netBorrowApy: YieldHistoricalDataPoint[]
+  apyAtTarget: YieldHistoricalDataPoint[]
+}
+
+export type YieldMetricType = 
+  | 'supplyApy'
+  | 'netSupplyApy'
+  | 'borrowApy'
+  | 'netBorrowApy'
+  | 'apyAtTarget'

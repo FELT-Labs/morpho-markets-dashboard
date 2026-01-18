@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CollateralTab } from '@/components/markets/tabs/collateral-tab'
+import { YieldTab } from '@/components/markets/tabs/yield-tab'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
@@ -45,6 +46,7 @@ export default async function MarketDetailPage({
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="yield">Yield</TabsTrigger>
           <TabsTrigger value="collateral">Collateral</TabsTrigger>
         </TabsList>
 
@@ -169,6 +171,10 @@ export default async function MarketDetailPage({
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="yield">
+          <YieldTab uniqueKey={uniqueKey} chainId={chainId} />
         </TabsContent>
 
         <TabsContent value="collateral">
