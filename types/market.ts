@@ -133,3 +133,56 @@ export type YieldMetricType =
   | 'borrowApy'
   | 'netBorrowApy'
   | 'apyAtTarget'
+
+export interface LiquidityMetrics {
+  // Current state
+  liquidityAssets: string
+  liquidityAssetsUsd?: number
+  reallocatableLiquidityAssets?: string
+  supplyAssets: string
+  supplyAssetsUsd?: number
+  borrowAssets: string
+  borrowAssetsUsd?: number
+  collateralAssets?: string
+  collateralAssetsUsd?: number
+  utilization: number
+  
+  // Target metrics
+  targetBorrowUtilization: string
+  targetWithdrawUtilization: string
+}
+
+export interface PublicAllocatorLiquidity {
+  id: string
+  assets: string
+  supplyMarket: {
+    uniqueKey: string
+  }
+  withdrawMarket: {
+    uniqueKey: string
+    loanAsset: {
+      symbol: string
+    }
+    collateralAsset: {
+      symbol: string
+    } | null
+  }
+}
+
+export interface LiquidityHistoricalDataPoint {
+  x: number // timestamp
+  y: number // value
+}
+
+export interface LiquidityHistoricalData {
+  liquidityAssetsUsd: LiquidityHistoricalDataPoint[]
+  supplyAssetsUsd: LiquidityHistoricalDataPoint[]
+  borrowAssetsUsd: LiquidityHistoricalDataPoint[]
+  utilization: LiquidityHistoricalDataPoint[]
+}
+
+export type LiquidityMetricType = 
+  | 'liquidityAssetsUsd'
+  | 'supplyAssetsUsd'
+  | 'borrowAssetsUsd'
+  | 'utilization'
