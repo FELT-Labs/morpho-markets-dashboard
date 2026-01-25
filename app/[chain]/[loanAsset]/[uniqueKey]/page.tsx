@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CollateralTab } from '@/components/markets/tabs/collateral-tab'
 import { YieldTab } from '@/components/markets/tabs/yield-tab'
 import { LiquidityTab } from '@/components/markets/tabs/liquidity-tab'
+import { ActivityTab } from '@/components/markets/tabs/activity-tab'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
@@ -20,7 +21,51 @@ export default async function MarketDetailPage({
   params: Promise<{ chain: string; loanAsset: string; uniqueKey: string }>
 }) {
   const { chain, loanAsset, uniqueKey } = await params
-  const market = await getMarketByKey(uniqueKey, chain)
+  
+  // Try to fetch market data with error handling
+  let market
+  try {
+    market = await getMarketByKey(uniqueKey, chain)
+  } catch (error) {
+    // Handle invalid market ID or fetch errors
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Link
+          href={`/${chain}/${loanAsset}`}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to markets
+        </Link>
+
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Market Not Found</CardTitle>
+            <CardDescription>
+              The requested market could not be loaded
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                The market with ID <code className="bg-muted px-2 py-1 rounded text-sm">{uniqueKey}</code> does not exist or could not be accessed.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Error: {error instanceof Error ? error.message : 'Unknown error'}
+              </p>
+              <Link
+                href={`/${chain}/${loanAsset}`}
+                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Return to markets list
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   const ltv = formatPercent(formatBigInt(market.lltv, 18))
   const chainId = chain === 'ethereum' ? 1 : 1
@@ -50,6 +95,7 @@ export default async function MarketDetailPage({
           <TabsTrigger value="yield">Yield</TabsTrigger>
           <TabsTrigger value="collateral">Collateral</TabsTrigger>
           <TabsTrigger value="liquidity">Liquidity</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -185,6 +231,10 @@ export default async function MarketDetailPage({
 
         <TabsContent value="liquidity">
           <LiquidityTab uniqueKey={uniqueKey} chainId={chainId} />
+        </TabsContent>
+
+        <TabsContent value="activity">
+          <ActivityTab uniqueKey={uniqueKey} chainId={chainId} />
         </TabsContent>
       </Tabs>
     </div>

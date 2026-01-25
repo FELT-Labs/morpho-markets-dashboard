@@ -186,3 +186,44 @@ export type LiquidityMetricType =
   | 'supplyAssetsUsd'
   | 'borrowAssetsUsd'
   | 'utilization'
+
+// Activity tab types
+
+export type TransactionType = 
+  | 'MarketSupply'
+  | 'MarketBorrow'
+  | 'MarketRepay'
+  | 'MarketWithdraw'
+  | 'MarketSupplyCollateral'
+  | 'MarketWithdrawCollateral'
+  | 'MarketLiquidation'
+
+export interface ActivityMetrics {
+  totalTransactions: number
+  totalVolumeUsd: number
+  activeUsers: number
+  liquidationCount: number
+  avgTransactionSize: number
+  transactionTypeDistribution: Record<TransactionType, number>
+}
+
+export interface ActivityVolumeData {
+  timestamp: number
+  supplyLoanVolume: number
+  supplyCollateralVolume: number
+  borrowVolume: number
+  repayVolume: number
+  withdrawLoanVolume: number
+  withdrawCollateralVolume: number
+  liquidationVolume: number
+}
+
+export interface LiquidationEvent {
+  timestamp: number
+  hash: string
+  userAddress: string
+  liquidatorAddress: string
+  repaidAssetsUsd: number
+  seizedAssetsUsd: number
+  badDebtAssetsUsd: number
+}
