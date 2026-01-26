@@ -8,6 +8,7 @@ const GET_VAULT_ALLOCATIONS_QUERY = `
       name
       symbol
       state {
+        totalAssetsUsd
         allocation {
           supplyAssets
           supplyAssetsUsd
@@ -73,6 +74,8 @@ export interface VaultMarketExposure {
   vaultName: string
   vaultSymbol: string
   color: string
+  allocationUsd: number
+  allocationPercentage: number
 }
 
 export function getMarketToVaultsMap(
@@ -82,14 +85,23 @@ export function getMarketToVaultsMap(
   const marketToVaults = new Map<string, VaultMarketExposure[]>()
   
   vaults.forEach(vault => {
-    const exposure: VaultMarketExposure = {
-      vaultAddress: vault.address,
-      vaultName: vault.name,
-      vaultSymbol: vault.symbol,
-      color: colorMap.get(vault.address.toLowerCase()) || '#6B7280'
-    }
+    const totalAssetsUsd = vault.state.totalAssetsUsd || 0
     
     vault.state.allocation.forEach(allocation => {
+      const allocationUsd = allocation.supplyAssetsUsd || 0
+      const allocationPercentage = totalAssetsUsd > 0 
+        ? (allocationUsd / totalAssetsUsd) * 100 
+        : 0
+      
+      const exposure: VaultMarketExposure = {
+        vaultAddress: vault.address,
+        vaultName: vault.name,
+        vaultSymbol: vault.symbol,
+        color: colorMap.get(vault.address.toLowerCase()) || '#6B7280',
+        allocationUsd,
+        allocationPercentage
+      }
+      
       const marketKey = allocation.market.uniqueKey
       const existing = marketToVaults.get(marketKey) || []
       marketToVaults.set(marketKey, [...existing, exposure])

@@ -165,9 +165,9 @@ export function MarketsTable({ markets, chain, loanAsset, marketToVaults }: Mark
                               color: exposure.color,
                               borderLeft: `3px solid ${exposure.color}`
                             }}
-                            title={exposure.vaultName}
+                            title={`${exposure.vaultName}\nAllocation: ${formatUSD(exposure.allocationUsd, true)} (${exposure.allocationPercentage.toFixed(1)}%)`}
                           >
-                            {exposure.vaultSymbol}
+                            {exposure.vaultSymbol} ({exposure.allocationPercentage.toFixed(1)}%)
                           </span>
                         ))}
                       </div>

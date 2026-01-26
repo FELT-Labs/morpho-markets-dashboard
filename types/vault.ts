@@ -7,6 +7,7 @@ export interface VaultAllocation {
 }
 
 export interface VaultState {
+  totalAssetsUsd: number
   allocation: VaultAllocation[]
 }
 
