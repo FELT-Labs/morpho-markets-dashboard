@@ -10,8 +10,30 @@ export interface PortfolioItem {
 }
 
 export interface PortfolioMetrics {
+  currentApy: number
+  average7dApy: number
   expectedReturn: number
   expectedRisk: number
   sharpe: number
   items: PortfolioItem[]
+  eligibleMarkets: number
+  targetApyMin: number
+  targetApyMax: number
+}
+
+export interface BenchmarkPortfolioMetrics {
+  currentApy: number
+  average7dApy: number
+  expectedReturn: number
+  expectedRisk: number
+  sharpe: number
+  activeMarkets: number
+}
+
+export interface PortfolioPerformancePoint {
+  timestamp: number
+  recommendedReturn?: number
+  sovaReturn?: number
+  recommendedApy?: number
+  sovaApy?: number
 }

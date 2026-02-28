@@ -139,7 +139,8 @@ export async function getMarketsWithHistory(
   chain: string = 'ethereum',
   loanAsset: string = 'usdc',
   limit: number = 100,
-  minSupplyUsd: number = 100000
+  minSupplyUsd: number = 100000,
+  historyDays: number = 7
 ): Promise<MarketHistoryData[]> {
   const chainId = chain === 'ethereum' ? 1 : 1
   // First, get the top markets by supply using the standard query
@@ -158,7 +159,7 @@ export async function getMarketsWithHistory(
   const uniqueKeys = markets.map(m => m.uniqueKey)
   
   const endTimestamp = Math.floor(Date.now() / 1000)
-  const startTimestamp = endTimestamp - 7 * 24 * 60 * 60 // 1 week ago
+  const startTimestamp = endTimestamp - historyDays * 24 * 60 * 60
 
   // Batch the history requests
   // We query history specifically for the markets we found above

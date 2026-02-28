@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
+import { AppNav } from "@/components/app-nav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +29,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="min-h-screen bg-background text-foreground">
+          <header className="sticky top-0 z-50 border-b border-black/5 bg-white/75 backdrop-blur dark:border-white/10 dark:bg-black/40">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+              <Link href="/ethereum/usdc" className="text-sm font-semibold tracking-tight">
+                Sova Dashboard
+              </Link>
+              <AppNav />
+            </div>
+          </header>
+          <main>{children}</main>
+        </div>
       </body>
     </html>
   );
